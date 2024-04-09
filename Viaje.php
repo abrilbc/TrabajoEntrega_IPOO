@@ -104,7 +104,9 @@ class Viaje{
         "\nCódigo del Viaje: " . $this->getCodigo() . 
         "\nDestino: " . $this->getDestino() . 
         "\nCantidad max. de Pasajeros: " . $this->getCantidad_Maxima() . 
-        "\n------------RESPONSABLE------------" . $this->getResponsable() . "\n-----------------------------------\n" .
+        "\n-----------------------------------\n" .
+        "\n------------RESPONSABLE------------" . $this->getResponsable() . 
+        "\n-----------------------------------\n" .
         "\n-------------PASAJEROS-------------\n";
         foreach ($this->getPasajeros() as $un_pasajero) {
             $info_viaje .= 
