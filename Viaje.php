@@ -47,12 +47,12 @@ class Viaje{
         $this->responsable = $nuevo_responsable;
     }
     /** Funcion que permite verificar si un pasajero está presente en la lista a partir de su Numero de Documento
-     * @param object $pasajero
+     * @param int $documento_a_comparar
      * @return boolean
      */
     public function verificarPasajero($documento_a_comparar) {
         $encontrado = false;
-        foreach ($this->getPasajeros() as $pasajeroA) {
+        foreach ($this->getPasajeros() as $indice => $pasajeroA) {
             if ($pasajeroA->getDocumento() == $documento_a_comparar) {
                 $encontrado = true;
                 break;
@@ -80,21 +80,22 @@ class Viaje{
      * @param 
      * @param int $num_identificadorDato
      */
-    public function modificarPasajero($id, $nuevo_dato, $num_identificadorDato) {
+    public function modificarPasajero($id, $atributo, $dato_cambiar) {
         $lista_pasajeros = $this->getPasajeros();
         $success = false;
         foreach ($lista_pasajeros as $pasajero) {
-            if ($this->verificarPasajero($pasajero)) {
+            if ($this->verificarPasajero($id)) {
                 //Switch para determinar el dato que se va a cambiar, con el propósito de no tener que cambiar todo sino un solo dato
-                switch ($num_identificadorDato) {
-                    case 1: $pasajero->setNombre($nuevo_dato);
+                switch ($atributo) {
+                    case 'nombre': $pasajero->setNombre($dato_cambiar);
                             break;
-                    case 2: $pasajero->setApellido($nuevo_dato);
+                    case 'apellido': $pasajero->setApellido($dato_cambiar);
                             break;
-                    case 3: $pasajero->setTelefono($nuevo_dato);
+                    case 'telefono': $pasajero->setTelefono($dato_cambiar);
                             break;
                 }
                 $success = true;
+                break;
             }
         }
         return $success;

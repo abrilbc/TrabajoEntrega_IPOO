@@ -12,6 +12,7 @@ $arregloPasajeros = array(
         $pasajero_2,
         $pasajero_3
 );
+
 //Comienza el MENÚ
 echo "AEROLINEAS Viaje Feliz\n";
 $responsable_viaje = new ResponsableV(5246, "56-451-485", "Luna", "Torres");
@@ -66,9 +67,42 @@ do {
                 $viajeFeliz->setResponsable($responsable_cambio);
                 echo "Responsable cambiado con éxito. \n";
                 break;
-        }
-    }
-    else {
+            case 4: 
+                    echo "Ingrese el número de documento del pasajero: ";
+                    $num_documento = trim(fgets(STDIN));
+                    if ($viajeFeliz->verificarPasajero($num_documento)) {
+                        echo "¿Qué dato desea modificar?\n";
+                        echo "1. Nombre\n";
+                        echo "2. Apellido\n";
+                        echo "3. Teléfono\n";
+                        echo "Selección: ";
+                        $eleccion = trim(fgets(STDIN));
+                        //Switch para cambiar un solo dato en vez de todos al mismo tiempo
+                        switch ($eleccion) {
+                            case 1:
+                                echo "\nNuevo nombre: ";
+                                $nuevo_nombre = trim(fgets(STDIN));
+                                $viajeFeliz->modificarPasajero($num_documento, 'nombre', $nuevo_nombre);
+                                break;
+                            case 2:
+                                echo "Nuevo apellido: ";
+                                $nuevo_apellido = trim(fgets(STDIN));
+                                $viajeFeliz->modificarPasajero($num_documento, 'apellido', $nuevo_apellido);
+                                break;
+                            case 3:
+                                echo "Nuevo teléfono: ";
+                                $nuevo_telefono = trim(fgets(STDIN));
+                                $viajeFeliz->modificarPasajero($num_documento, 'telefono', $nuevo_telefono);
+                                break;
+                            default:
+                                echo "Opción inválida.\n";
+                        }
+                        echo "\n--> Dato cambiado con éxito.\n\n";
+                    } else {
+                        echo "El pasajero con el número de documento $num_documento no se encontró en el viaje.\n";
+                    }
+            }
+    } else {
         $opcion = 0;
     }
 } while ($opcion != 5);
