@@ -1,5 +1,5 @@
 <?php
-class Persona{
+class Pasajero{
     private $nombre;
     private $apellido;
     private $documento;
@@ -34,6 +34,6 @@ class Persona{
     public function __toString() {
         return " - Nombre y Apellido: " . $this->getNombre() . " " . $this->getApellido() . 
                 "\n - Número de Documento: " . $this->getDocumento() . 
-                "\n - Teléfono: " . $this->getTelefono() . "\n"; 
+                "\n - Teléfono: " . $this->getTelefono(); 
     }
 }

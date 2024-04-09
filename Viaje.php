@@ -1,6 +1,6 @@
 <?php
 include_once 'Pasajero.php';
-include_once 'ResponsableV';
+include_once 'ResponsableV.php';
 class Viaje{
     private $codigo;
     private $destino;
@@ -50,29 +50,30 @@ class Viaje{
      * @param object $pasajero
      * @return boolean
      */
-    public function verificarPasajero($pasajero) {
+    public function verificarPasajero($documento_a_comparar) {
         $encontrado = false;
         foreach ($this->getPasajeros() as $pasajeroA) {
-            if ($pasajeroA->getDocumento() == $pasajero->getDocumento()) {
+            if ($pasajeroA->getDocumento() == $documento_a_comparar) {
                 $encontrado = true;
                 break;
             }
         }
         return $encontrado;
     }
-    /** Agrega un pasajero luego de que se cumplan las verificaciones
+    public function contadorCantidadPasajeros() {
+        $full = true;
+        if (count($this->getPasajeros()) < $this->getCantidad_Maxima()) {
+            $full = false;
+        }
+        return $full;
+    }
+    /** Agrega un pasajero 
      * @param object $pasajero
-     * @return boolean
      */
     public function agregarPasajero($pasajero) {
-        $agregado = false;
         $array_pasajeros = $this->getPasajeros();
-        if (count($array_pasajeros) < $this->getCantidad_Maxima() && !$this->verificarPasajero($pasajero)) {
             $array_pasajeros[] = $pasajero;
             $this->setPasajeros($array_pasajeros);
-            $agregado = true;
-        }
-        return $agregado;
     }
     /** Modifica un dato de un pasajero si lo encuentra en el arreglo existente
      * @param int $id
@@ -98,28 +99,17 @@ class Viaje{
         }
         return $success;
     }
-    public function modificarResponsable($nuevo_resp) {
-        $responsableActual = $this->getResponsable();
-        $success = false;
-        if ($nuevo_resp->getNumero_Empleado() == $responsableActual->getNumero_Empleado()) {
-            $this->setResponsable($nuevo_resp);
-            $success = true;
-        }
-        return $success;
-    }
     public function __toString() {
-        $info_viaje = "\n----VIAJE FELIZ----" . 
+        $info_viaje = "\n------------VIAJE FELIZ------------" . 
         "\nCódigo del Viaje: " . $this->getCodigo() . 
         "\nDestino: " . $this->getDestino() . 
         "\nCantidad max. de Pasajeros: " . $this->getCantidad_Maxima() . 
-        "\n----RESPONSABLE----" . $this->getResponsable();
-        "\n*---PASAJEROS---*";
+        "\n------------RESPONSABLE------------" . $this->getResponsable() . "\n-----------------------------------\n" .
+        "\n-------------PASAJEROS-------------\n";
         foreach ($this->getPasajeros() as $un_pasajero) {
-            $info_viaje .= "\n--------------------\n".
-                            "\nNombre y Apellido: " . $un_pasajero->getApellido() . ", " . $un_pasajero->getNombre() . 
-                            "\nNúmero de Documento: " . $un_pasajero->getDocumento() . 
-                            "\nTeléfono: " . $un_pasajero->getTelefono() . 
-                            "\n--------------------\n";
+            $info_viaje .= 
+                            $un_pasajero->__toString() .
+                            "\n-----------------------------------\n";
         }
         return $info_viaje;
     }
