@@ -36,5 +36,4 @@ class Persona{
                 "\nNúmero de Documento: " . $this->getDocumento() . 
                 "\nTeléfono: " . $this->getTelefono(); 
     }
-
 }
