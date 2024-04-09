@@ -74,5 +74,53 @@ class Viaje{
         }
         return $agregado;
     }
-    
+    /** Modifica un dato de un pasajero si lo encuentra en el arreglo existente
+     * @param int $id
+     * @param 
+     * @param int $num_identificadorDato
+     */
+    public function modificarPasajero($id, $nuevo_dato, $num_identificadorDato) {
+        $lista_pasajeros = $this->getPasajeros();
+        $success = false;
+        foreach ($lista_pasajeros as $pasajero) {
+            if ($this->verificarPasajero($pasajero)) {
+                //Switch para determinar el dato que se va a cambiar, con el propósito de no tener que cambiar todo sino un solo dato
+                switch ($num_identificadorDato) {
+                    case 1: $pasajero->setNombre($nuevo_dato);
+                            break;
+                    case 2: $pasajero->setApellido($nuevo_dato);
+                            break;
+                    case 3: $pasajero->setTelefono($nuevo_dato);
+                            break;
+                }
+                $success = true;
+            }
+        }
+        return $success;
+    }
+    public function modificarResponsable($nuevo_resp) {
+        $responsableActual = $this->getResponsable();
+        $success = false;
+        if ($nuevo_resp->getNumero_Empleado() == $responsableActual->getNumero_Empleado()) {
+            $this->setResponsable($nuevo_resp);
+            $success = true;
+        }
+        return $success;
+    }
+    public function __toString() {
+        $info_viaje = "\n----VIAJE FELIZ----" . 
+        "\nCódigo del Viaje: " . $this->getCodigo() . 
+        "\nDestino: " . $this->getDestino() . 
+        "\nCantidad max. de Pasajeros: " . $this->getCantidad_Maxima() . 
+        "\n----RESPONSABLE----" . $this->getResponsable();
+        "\n*---PASAJEROS---*";
+        foreach ($this->getPasajeros() as $un_pasajero) {
+            $info_viaje .= "\n--------------------\n".
+                            "\nNombre y Apellido: " . $un_pasajero->getApellido() . ", " . $un_pasajero->getNombre() . 
+                            "\nNúmero de Documento: " . $un_pasajero->getDocumento() . 
+                            "\nTeléfono: " . $un_pasajero->getTelefono() . 
+                            "\n--------------------\n";
+        }
+        return $info_viaje;
+    }
 }

@@ -32,8 +32,8 @@ class Persona{
         $this->telefono = $nuevo_telefono;
     }
     public function __toString() {
-        return "Nombre y Apellido: " . $this->getNombre() . " " . $this->getApellido() . 
-                "\nNúmero de Documento: " . $this->getDocumento() . 
-                "\nTeléfono: " . $this->getTelefono(); 
+        return " - Nombre y Apellido: " . $this->getNombre() . " " . $this->getApellido() . 
+                "\n - Número de Documento: " . $this->getDocumento() . 
+                "\n - Teléfono: " . $this->getTelefono() . "\n"; 
     }
 }
