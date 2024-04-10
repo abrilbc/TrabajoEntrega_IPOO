@@ -50,7 +50,7 @@ function menuModificarPasajero($elViajeFeliz) {
             echo "\n--> Dato cambiado con éxito.\n\n";
     } else {
         echo "El pasajero con el número de documento" . $num_documento . "no se encontró en el viaje.\n";
-    }                    
+    }         
 }
 //Arreglo Inicial de pasajeros
 $pasajero_1 = new Pasajero("Brisa", "Celayes", 45390428, 2995859227);
@@ -62,9 +62,7 @@ $arregloPasajeros = array(
         $pasajero_3
 );
 
-
 //PROGRAMA PRINCIPAL
-
 
 $responsable_viaje = new ResponsableV(5246, "56-451-485", "Luna", "Torres");
 $viajeFeliz = new Viaje("845-6511", "Bariloche", 10, $responsable_viaje);
@@ -109,10 +107,44 @@ do {
                 echo "Número de Licencia: ";
                 $licencia_num = trim(fgets(STDIN));
                 $responsable_cambio= new ResponsableV($empleado_num, $licencia_num, $nombreResponsable, $apellidoResponsable);
-                $viajeFeliz->setResponsable($responsable_cambio);
+                $viajeFeliz->setResponsableV($responsable_cambio);
+                echo "Ingrese el número de documento del pasajero: ";
+                    $num_documento = trim(fgets(STDIN));
+                    if ($viajeFeliz->verificarPasajero($num_documento)) {
+                        echo "¿Qué dato desea modificar?\n";
+                        echo "1. Nombre\n";
+                        echo "2. Apellido\n";
+                        echo "3. Teléfono\n";
+                        echo "Selección: ";
+                        $eleccion = trim(fgets(STDIN));
+                        //Switch para cambiar un solo dato en vez de todos al mismo tiempo
+                        switch ($eleccion) {
+                            case 1:
+                                echo "\nNuevo nombre: ";
+                                $nuevo_nombre = trim(fgets(STDIN));
+                                $viajeFeliz->modificarPasajero($num_documento, 'nombre', $nuevo_nombre);
+                                break;
+                            case 2:
+                                echo "Nuevo apellido: ";
+                                $nuevo_apellido = trim(fgets(STDIN));
+                                $viajeFeliz->modificarPasajero($num_documento, 'apellido', $nuevo_apellido);
+                                break;
+                            case 3:
+                                echo "Nuevo teléfono: ";
+                                $nuevo_telefono = trim(fgets(STDIN));
+                                $viajeFeliz->modificarPasajero($num_documento, 'telefono', $nuevo_telefono);
+                                break;
+                            default:
+                                echo "Opción inválida.\n";
+                        }
+                        echo "\n--> Dato cambiado con éxito.\n\n";
+                    } else {
+                        echo "El pasajero con el número de documento $num_documento no se encontró en el viaje.\n";
+                    }($responsable_cambio);
                 echo "Responsable cambiado con éxito. \n";
                 break;
-            case 4: 
+            case 4:
+                menuModificarPasajero($viajeFeliz);
             }
     } else {
         $opcion = 0;

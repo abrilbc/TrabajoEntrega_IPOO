@@ -90,7 +90,6 @@ class Viaje{
         }
         return $indice;
     }
-
     /** Función que devuelve true si el viaje está lleno, false si no lo está
      * @return bool $full
      */
@@ -104,24 +103,30 @@ class Viaje{
     /** Funcion que modifica los datos de un pasajero
      * @param object $objPasajero
      */
-    
-    /** Función que agrega un pasajero si no está en el arreglo en base a su dni, y si está, lo modifica
+    public function modificarPasajero($dni, $atributo, $datoNuevo) {
+        $arregloPasajeros = $this->getArrayPasajeros();
+        $indiceCambio = $this->obtenerIndicePasajero($dni);
+        $pasajero = $arregloPasajeros[$indiceCambio];
+        if ($this->verificarPasajero($dni)) {
+            switch ($atributo) {
+                case 'nombre': 
+                    $pasajero->setNombre($datoNuevo);
+                    break;
+                case 'apellido':
+                    $pasajero->setApellido($datoNuevo);
+                    break;
+                case 'telefono':
+                    $pasajero->setTelefono($datoNuevo);
+                    break;
+            }
+        }
+    }
+    /** Función que agrega un pasajero si no está en el arreglo en base a su dni
      * @param int $docObjPasajero
      * @param object $objPasajero
      * @return bool $success
      */
-    public function ingresarModificarPasajero($ObjPasajero) {
-        $pasajeros = $this->getArrayPasajeros();
-        //Datos del pasajero
-        $docPasajero = $ObjPasajero->getDni();
-        $nombrePasajero = $ObjPasajero->getNombre();
-        $apellidoPasajero = $ObjPasajero->getApellido();
-        $telPasajero = $ObjPasajero->getTelefono();
-        if ($this->verificarPasajero($docPasajero)) {
-            $indiceP = $this->obtenerIndicePasajero($docPasajero);
-            $pasajeroA = $pasajeros[$indiceP];
-            
-        }
+    public function ingresarPasajero($ObjPasajero) {
         
     }
     public function __toString() {
