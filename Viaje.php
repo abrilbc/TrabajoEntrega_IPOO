@@ -4,114 +4,138 @@ include_once 'ResponsableV.php';
 class Viaje{
     private $codigo;
     private $destino;
-    private $cantidad_maxima;
-    //Arreglo de pasajeros
-    private array $pasajeros;
-    private $responsable;
-
-    public function __construct($codigo_viaje, $destino_viaje, $cantidad_viaje, $responsableV){
-        $this->codigo = $codigo_viaje;
-        $this->destino = $destino_viaje;
-        $this->cantidad_maxima = $cantidad_viaje;
-        $this->pasajeros = array(); //Comienza como un array vacío
-        $this->responsable = $responsableV;
+    private $cantMaxima;
+    private $arrayPasajeros;
+    private $objResponsableV;
+    
+//Metodo constructor 
+    public function __construct($vCodigo, $vDestino, $vCantMaxima, $objetoResponsableV) {
+        $this->codigo = $vCodigo;
+        $this->destino = $vDestino;
+        $this->cantMaxima = $vCantMaxima;
+        $this->arrayPasajeros = array(); //array vacío
+        $this->objResponsableV = $objetoResponsableV;
     }
+//Métodos de Acceso
     public function getCodigo() {
         return $this->codigo;
     }
-    public function setCodigo($nuevo_codigo) {
-        $this->codigo = $nuevo_codigo;
+    public function setCodigo($nuevoCodigo) {
+        $this->codigo = $nuevoCodigo;
     }
     public function getDestino() {
         return $this->destino;
     }
-    public function setDestino($nuevo_codigo) {
-        $this->codigo = $nuevo_codigo;
+    public function setDestino($nuevoDestino) {
+        $this->destino = $nuevoDestino;
     }
-    public function getCantidad_Maxima(){
-        return $this->cantidad_maxima;
+    public function getCantMaxima() {
+        return $this->cantMaxima;
     }
-    public function setCantidad_Maxima($nueva_cantidad) {
-        $this->cantidad_maxima = $nueva_cantidad;
+    public function setCantMaxima($nuevaCantMaxima) {
+        $this->cantMaxima = $nuevaCantMaxima;
     }
-    public function getPasajeros() {
-        return $this->pasajeros;
+    public function getArrayPasajeros() {
+        return $this->arrayPasajeros;
     }
-    public function setPasajeros($nuevo_arrayPasajeros) {
-        $this->pasajeros = $nuevo_arrayPasajeros;
+    public function setArrayPasajeros($nuevoArrayPasajeros) {
+        $this->arrayPasajeros = $nuevoArrayPasajeros;
     }
-    public function getResponsable() {
-        return $this->responsable;
+    public function getObjResponsableV() {
+        return $this->objResponsableV;
     }
-    public function setResponsable($nuevo_responsable) {
-        $this->responsable = $nuevo_responsable;
+    public function setObjResponsableV($nuevoObjResponsableV) {
+        $this->objResponsableV = $nuevoObjResponsableV;
     }
-    /** Funcion que permite verificar si un pasajero está presente en la lista a partir de su Numero de Documento
-     * @param int $documento_a_comparar
-     * @return boolean
+//Métodos y funciones del objeto
+
+    /** Funcion que permite verificar si un pasajero está presente 
+     * en la lista a partir de su Numero de Documento
+     * @param int $docObjPasajero
+     * @return bool $found
      */
-    public function verificarPasajero($documento_a_comparar) {
-        $encontrado = false;
-        foreach ($this->getPasajeros() as $indice => $pasajeroA) {
-            if ($pasajeroA->getDocumento() == $documento_a_comparar) {
-                $encontrado = true;
-                break;
+    public function verificarPasajero($docObjPasajero) {
+        $arregloPasajeros = $this->getArrayPasajeros();
+        $indice = 0;
+        $found = false;
+        while ($indice <= $this->getCantMaxima() && !$found) {
+            $dniPasajeroEnArray = $arregloPasajeros[$indice]->getDni();
+            if ($dniPasajeroEnArray == $docObjPasajero) {
+                $found = true;
+            } else {
+                $indice++;
             }
         }
-        return $encontrado;
+        return $found;
     }
-    public function contadorCantidadPasajeros() {
+    /** Función para buscar un pasajero con el dni y devuelve el indice de la 
+     * posicion de ese pasajero en el arreglo
+     * @param int $dniObjPasajero
+     * @return int $indice 
+     */
+    public function obtenerIndicePasajero($dniObjPasajero) {
+        $arregloPasajeros = $this->getArrayPasajeros();
+        $indice = 0;
+        $verifica = false;
+        while ($indice <= $this->getCantMaxima() && !$verifica) {
+            $dniPasajeroEnArray = $arregloPasajeros[$indice]->getDni();
+            if ($dniPasajeroEnArray == $dniObjPasajero) {
+                $verifica = true;
+            } else {
+                $indice++;
+            }
+        }
+        if (!$verifica) {
+            $indice = -1;
+        }
+        return $indice;
+    }
+
+    /** Función que devuelve true si el viaje está lleno, false si no lo está
+     * @return bool $full
+     */
+    public function verificaViajeLleno() {
         $full = true;
-        if (count($this->getPasajeros()) < $this->getCantidad_Maxima()) {
+        if (count($this->getArrayPasajeros()) < $this->getCantMaxima()) {
             $full = false;
         }
         return $full;
     }
-    /** Agrega un pasajero 
-     * @param object $pasajero
+    /** Funcion que modifica los datos de un pasajero
+     * @param object $objPasajero
      */
-    public function agregarPasajero($pasajero) {
-        $array_pasajeros = $this->getPasajeros();
-            $array_pasajeros[] = $pasajero;
-            $this->setPasajeros($array_pasajeros);
-    }
-    /** Modifica un dato de un pasajero si lo encuentra en el arreglo existente
-     * @param int $id
-     * @param 
-     * @param int $num_identificadorDato
+    
+    /** Función que agrega un pasajero si no está en el arreglo en base a su dni, y si está, lo modifica
+     * @param int $docObjPasajero
+     * @param object $objPasajero
+     * @return bool $success
      */
-    public function modificarPasajero($id, $atributo, $dato_cambiar) {
-        $lista_pasajeros = $this->getPasajeros();
-        $success = false;
-        foreach ($lista_pasajeros as $pasajero) {
-            if ($this->verificarPasajero($id)) {
-                //Switch para determinar el dato que se va a cambiar, con el propósito de no tener que cambiar todo sino un solo dato
-                switch ($atributo) {
-                    case 'nombre': $pasajero->setNombre($dato_cambiar);
-                            break;
-                    case 'apellido': $pasajero->setApellido($dato_cambiar);
-                            break;
-                    case 'telefono': $pasajero->setTelefono($dato_cambiar);
-                            break;
-                }
-                $success = true;
-                break;
-            }
+    public function ingresarModificarPasajero($ObjPasajero) {
+        $pasajeros = $this->getArrayPasajeros();
+        //Datos del pasajero
+        $docPasajero = $ObjPasajero->getDni();
+        $nombrePasajero = $ObjPasajero->getNombre();
+        $apellidoPasajero = $ObjPasajero->getApellido();
+        $telPasajero = $ObjPasajero->getTelefono();
+        if ($this->verificarPasajero($docPasajero)) {
+            $indiceP = $this->obtenerIndicePasajero($docPasajero);
+            $pasajeroA = $pasajeros[$indiceP];
+            
         }
-        return $success;
+        
     }
     public function __toString() {
         $info_viaje = "\n------------VIAJE FELIZ------------" . 
         "\nCódigo del Viaje: " . $this->getCodigo() . 
         "\nDestino: " . $this->getDestino() . 
-        "\nCantidad max. de Pasajeros: " . $this->getCantidad_Maxima() . 
+        "\nCantidad max. de Pasajeros: " . $this->getCantMaxima() . 
         "\n-----------------------------------\n" .
-        "\n------------RESPONSABLE------------" . $this->getResponsable() . 
+        "\n------------RESPONSABLE------------" 
+            . $this->getObjResponsableV() . 
         "\n-----------------------------------\n" .
         "\n-------------PASAJEROS-------------\n";
-        foreach ($this->getPasajeros() as $un_pasajero) {
-            $info_viaje .= 
-                            $un_pasajero->__toString() .
+        foreach ($this->getArrayPasajeros() as $un_pasajero) {
+            $info_viaje .= $un_pasajero->__toString() .
                             "\n-----------------------------------\n";
         }
         return $info_viaje;
