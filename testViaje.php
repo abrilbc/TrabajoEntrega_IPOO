@@ -85,7 +85,7 @@ function menuModificarResponsable($elViaje) {
         }
             echo "\n--> Dato cambiado con éxito.\n\n";
     } else {
-        echo "El responsable con el número de empleado" . $num_empleado . "no se encontró en el viaje.\n";
+        echo "ERROR: Al parecer esta persona no es responsable de este viaje.\n\n";
     }
 }
 

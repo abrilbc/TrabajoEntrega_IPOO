@@ -72,9 +72,9 @@ class Viaje{
     public function verificarResponsable($numero_empleado) {
         $responsable = $this->getObjResponsableV();
         $nroEmpleado = $responsable->getNumero_Empleado();
-        $existente = true;
+        $existente = false;
         if ($nroEmpleado != $numero_empleado) {
-            $existente = false;
+            $existente = true;
         }
         return $existente;
     }
