@@ -68,6 +68,17 @@ class Viaje{
         }
         return $found;
     }
+
+    public function verificarResponsable($numero_empleado) {
+        $responsable = $this->getObjResponsableV();
+        $nroEmpleado = $responsable->getNumero_Empleado();
+        $existente = true;
+        if ($nroEmpleado != $numero_empleado) {
+            $existente = false;
+        }
+        return $existente;
+    }
+
     /** Función para buscar un pasajero con el dni y devuelve el indice de la 
      * posicion de ese pasajero en el arreglo
      * @param int $dniObjPasajero
@@ -100,8 +111,10 @@ class Viaje{
         }
         return $full;
     }
-    /** Funcion que modifica los datos de un pasajero
-     * @param object $objPasajero
+    /** Funcion que modifica los datos de un pasajero basado en el dato que se quiere cambiar
+     * @param int $dni
+     * @param string $atributo
+     * @param mixed $datoNuevo
      */
     public function modificarPasajero($dni, $atributo, $datoNuevo) {
         $arregloPasajeros = $this->getArrayPasajeros();
@@ -121,13 +134,46 @@ class Viaje{
             }
         }
     }
+
+    /** Funcion que modifica los datos de un pasajero basado en el dato que se quiere cambiar
+     * @param int $dni
+     * @param string $atributo
+     * @param mixed $datoNuevo
+     */
+    public function modificarResponsable($atributo, $datoNuevo) {
+        $objResponsable = $this->getObjResponsableV();
+        $nroEmpleado_responsable = $objResponsable->getNumero_Empleado();
+        if ($this->verificarResponsable($nroEmpleado_responsable)) {
+            switch ($atributo) {
+                case 'nombre': 
+                    $objResponsable->setNombre($datoNuevo);
+                    break;
+                case 'apellido':
+                    $objResponsable->setApellido($datoNuevo);
+                    break;
+                case 'nroLicencia':
+                    $objResponsable->setNumero_Licencia($datoNuevo);
+                    break;
+            }
+        }
+    }
+
     /** Función que agrega un pasajero si no está en el arreglo en base a su dni
-     * @param int $docObjPasajero
      * @param object $objPasajero
      * @return bool $success
      */
-    public function ingresarPasajero($ObjPasajero) {
-        
+    public function ingresarPasajero($objPasajero) {
+        $success = false;
+        $arregloPasajeros = $this->getArrayPasajeros();
+        if (!($this->verificaViajeLleno())) {
+            $dniPasajero = $objPasajero->getDocumento();
+            if (!($this->verificarPasajero($dniPasajero))) {
+                $arregloPasajeros[] = $objPasajero;
+                $this->setArrayPasajeros($arregloPasajeros);
+                $success = true;
+            }
+        }
+        return $success;
     }
     public function __toString() {
         $info_viaje = "\n------------VIAJE FELIZ------------" . 
